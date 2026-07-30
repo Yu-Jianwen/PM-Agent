@@ -117,8 +117,8 @@ PM 产出 PRD + 产品定义 → hw-review 审查文档质量 → 修正通过
 ### Step 1: 加载产品全貌
 
 - **输入**：
-  - PRD 文档（`output/<project>/prd.md`）
-  - 产品定义文档（`output/<project>/product_definition.md`）
+  - PRD 文档（`output/<project>/PRD_产品需求文档.md`）
+  - 产品定义文档（`output/<project>/04_产品定义文档.md`）
   - `registers/assumptions.csv`（全部记录）
   - `registers/evidence.csv`（全部记录）
   - `registers/risks.csv`（全部记录）
@@ -450,8 +450,8 @@ _（共 Y 个 HIGH PRIORITY 假设）_
 
 | 输入项 | 状态 | 来源/版本 | 影响范围 |
 |--------|------|----------|---------|
-| PRD | 已获取 | `output/<project>/prd.md` v{version} | 全报告 |
-| 产品定义 | 已获取 | `output/<project>/product_definition.md` v{version} | 全报告 |
+| PRD | 已获取 | `output/<project>/PRD_产品需求文档.md` v{version} | 全报告 |
+| 产品定义 | 已获取 | `output/<project>/04_产品定义文档.md` v{version} | 全报告 |
 | assumptions.csv | 已获取 | `registers/assumptions.csv` ({count} 条记录) | 假设提取 + 交叉比对 |
 | evidence.csv | 已获取 | `registers/evidence.csv` ({count} 条记录) | Uncertainty 评分 |
 | risks.csv | 已获取 | `registers/risks.csv` ({count} 条记录) | 已知风险排除 |

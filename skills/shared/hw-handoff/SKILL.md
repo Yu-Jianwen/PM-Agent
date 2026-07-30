@@ -406,7 +406,7 @@ APP ───────────────► 测试（提供 UI 交互�
 |------|------|---------|------|
 | PRD | v{版本} | Gate 7 {日期} | output/{project}/PRD_产品需求文档.md |
 | 产品定义 | v{版本} | Gate 6 {日期} | output/{project}/04_产品定义文档.md |
-| 验证计划 | v{版本} | Gate 7 {日期} | output/{project}/验证计划.md |
+| 验证计划 | v{版本} | Gate 7 {日期} | output/{project}/06_验证计划.md |
 | requirements.csv | 冻结 | Gate 7 {日期} | registers/requirements.csv |
 | traceability.csv | 冻结 | Gate 7 {日期} | registers/traceability.csv |
 

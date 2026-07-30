@@ -295,7 +295,7 @@ Think Step by Step。每一步包含输入、操作、检查点。
 
 ### 输出文件
 
-1. `output/{project}/competitive_analysis_report.md` — 完整竞品研究分析报告
+1. `output/{project}/09_竞品研究分析报告.md` — 完整竞品研究分析报告
 2. `registers/evidence.csv` — 新增 evidence 记录（流式写入，每发现即写入）
 3. `registers/assumptions.csv` — 新增 assumption 记录
 
@@ -318,7 +318,7 @@ evidence_id,title,source_type,source_name,url_or_path,date_collected,source_grad
 | source_grade | 源可信度等级 | A/B+/B/B-/C/D（硬件特定赋级见下文） |
 | direct_quote | 源文直接引述 | 用户原话/参数原文/器件丝印文字，**5字以上** |
 | importance | 重要性 | `central` / `supporting` / `tangential` |
-| related_doc | 关联文档 | `competitive_analysis_report.md` |
+| related_doc | 关联文档 | `09_竞品研究分析报告` |
 | related_section | 关联章节 | 报告章节编号，如 `3` / `8` / `10` |
 | summary | 一句话摘要 | 本证据对竞品分析的结论意味着什么 |
 | confidence | 置信度 | 高/中/低 |

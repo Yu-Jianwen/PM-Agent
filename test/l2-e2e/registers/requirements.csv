@@ -1,0 +1,11 @@
+requirement_id,requirement,source,priority,doc,owner,status,acceptance_criteria,related_evidence,notes
+REQ-CWLS-101,链轮驱动电机额定扭矩≥0.5N·m,竞品对标,P0,PRD,硬件工程师,待开发,测功机测试扭矩≥0.5N·m,EV-CWLS-104,
+REQ-CWLS-102,电机单价≤¥90/台（批量1000台）,成本目标,P0,PRD,采购,待确认,供应商正式报价单≤¥90,EV-CWLS-103,
+REQ-CWLS-103,霍尔传感器检测链轮转动方向准确率≥99%,用户需求,P0,PRD,固件工程师,待开发,100次手动操作测试，方向判断准确率≥99%,EV-CWLS-106,
+REQ-CWLS-104,手动行程计算误差≤±5%,用户需求,P0,PRD,固件工程师,待开发,10台样机各测50次，误差均≤±5%,EV-CWLS-102;EV-CWLS-106,
+REQ-CWLS-105,增加霍尔传感器后BOM增量成本≤¥8,成本目标,P0,PRD,硬件工程师+采购,待确认,供应商正式报价+PCB布局成本估算≤¥8,EV-CWLS-103,
+REQ-CWLS-106,电机噪音≤45dB(A)@1m,用户需求,P1,PRD,硬件工程师,待开发,消声室测试噪音≤45dB(A),EV-CWLS-107,
+REQ-CWLS-107,通过CCC认证（GB 4706.1 + GB 4343.1）,合规要求,P0,PRD,质量+认证,待送检,取得CCC型式试验报告+CCC证书,EV-CWLS-108;EV-CWLS-110,
+REQ-CWLS-108,电机通过GB/T 12350安全要求,合规要求,P1,PRD,硬件工程师+质量,待送检,取得电机安全检测报告,EV-CWLS-109,
+REQ-CWLS-109,停电后仍可手动操作（机械结构不锁死）,用户需求,P0,PRD,结构工程师+硬件工程师,待开发,断电后手动推拉窗扇，操作力≤50N且无卡滞,EV-CWLS-102;EV-CWLS-106,
+REQ-CWLS-110,支持速度调节功能,V2增强,用户需求,P2,PRD,固件工程师,已规划,未定义具体验收标准,EV-CWLS-107,V2功能，不在MVP范围

@@ -1,0 +1,8 @@
+decision_id,decision,decision_type,date,owner,options_considered,rationale,related_evidence,status,notes
+DEC-CWLS-101,批准L2产品衍生路线,路由,2026-06-05,余健文,L1/L2/L3,本项目增加霍尔传感器识别手动力度/方向/行程，属产品衍生,EV-CWLS-101,approved,Gate 1
+DEC-CWLS-102,确认市场研究充分可进入产品规划,阶段审批,2026-06-30,余健文,批准/退回补充,市场研究+用户研究覆盖核心场景和角色链,EV-CWLS-101;EV-CWLS-102;EV-CWLS-106;EV-CWLS-107,approved,Gate 2
+DEC-CWLS-103,确认竞品理解充分,阶段审批,2026-07-05,余健文,批准/退回补充,竞品拆机确认霍尔方案可行+竞品B无手动模式=差异化窗口,EV-CWLS-104;EV-CWLS-105,approved,Gate 3
+DEC-CWLS-104,确认三定方向正确,阶段审批,2026-07-12,余健文,批准/退回补充,定目标市场=后装智能开窗器/定差异化=手动模式+行程感知,EV-CWLS-101;EV-CWLS-104;EV-CWLS-105;EV-CWLS-106,approved,Gate 4
+DEC-CWLS-105,确认商业可行性,阶段审批,2026-07-18,余健文,批准/退回补充,MRD/BRD合并版：BOM增量成本≤¥8，预期售价可提升¥30-50,EV-CWLS-103,approved,Gate 5
+DEC-CWLS-106,确认产品边界清晰,阶段审批,2026-07-22,余健文,批准/退回补充,产品定义明确MVP范围含手动模式+行程感知，不含速度调节,EV-CWLS-104;EV-CWLS-106;EV-CWLS-107,approved,Gate 6
+DEC-CWLS-107,确认可进入开发,阶段审批,2026-07-28,余健文,批准/退回补充,PRD四模块完整+traceability覆盖率100%+验证计划就绪,,approved,Gate 7

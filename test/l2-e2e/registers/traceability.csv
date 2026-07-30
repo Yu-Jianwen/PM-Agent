@@ -1,0 +1,12 @@
+trace_id,research_finding,market_need,product_definition,requirement_id,validation_item,evidence_id,status,notes
+T-CWLS-101,竞品A电机扭矩0.5N·m,开窗器需要足够扭矩驱动链条,电机扭矩需对标竞品A,REQ-CWLS-101,测功机扭矩测试,EV-CWLS-104,linked,
+T-CWLS-102,霍尔传感器+电机BOM成本估算,控制BOM增量成本,传感器+电机总成本≤¥98,REQ-CWLS-102,供应商报价确认,EV-CWLS-103,linked,
+T-CWLS-109,霍尔传感器+电机BOM成本估算,控制BOM增量成本,传感器增量成本≤¥8,REQ-CWLS-105,供应商报价+PCB成本估算,EV-CWLS-103,linked,
+T-CWLS-103,安装工人反馈停电后无法操作,用户需要停电时的手动方案,方向检测准确率≥99%,REQ-CWLS-103,100次方向检测测试,EV-CWLS-106,linked,
+T-CWLS-104,用户想知道窗户开了多大,用户需要行程感知,行程计算误差≤±5%,REQ-CWLS-104,50次行程精度测试×10台,EV-CWLS-102,linked,
+T-CWLS-110,用户想知道窗户开了多大,用户需要行程感知,停电后手动操作力≤50N,REQ-CWLS-109,断电手动操作测试,EV-CWLS-106,linked,
+T-CWLS-105,47条评论中12条提到噪音,静音是Top 3用户痛点,电机噪音≤45dB(A),REQ-CWLS-106,消声室噪音测试,EV-CWLS-107,linked,
+T-CWLS-106,开窗器需CCC认证(GB 4706.1+GB 4343.1),产品上市必须通过认证,通过CCC+GB/T 12350,REQ-CWLS-107,CCC型式试验,EV-CWLS-108,linked,
+T-CWLS-111,开窗器需CCC认证(GB 4706.1+GB 4343.1),产品上市必须通过认证,通过CCC+GB/T 12350,REQ-CWLS-108,电机安全检测,EV-CWLS-109,linked,
+T-CWLS-107,竞品A已实现霍尔传感器方案,技术路线被验证可行,霍尔传感器方向检测方案,REQ-CWLS-103,方向检测验证,EV-CWLS-104,linked,
+T-CWLS-108,竞品B无手动模式,差异化窗口明确,手动模式为核心差异化功能,REQ-CWLS-109,手动操作测试,EV-CWLS-105,linked,

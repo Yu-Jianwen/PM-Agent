@@ -1,0 +1,5 @@
+risk_id,risk,category,probability,impact,trigger,mitigation,owner,status,related_evidence,notes
+RISK-CWLS-101,霍尔传感器在高温下失效,技术,低,高,环境温度>70°C时传感器输出异常,选型时确认温度范围(-40~+125°C)+高温老化测试,硬件工程师,待处理,EV-CWLS-103,
+RISK-CWLS-102,手动推拉速度波动导致行程计算偏差>5%,技术,中,高,样机测试中行程误差超标,引入速度补偿算法+增加校准模式,固件工程师,待处理,EV-CWLS-106,
+RISK-CWLS-103,CCC认证周期超出项目计划,认证,中,高,CCC型式试验不合格或资料补正延迟,提前启动认证+预留6周缓冲期,项目经理,待处理,EV-CWLS-108,
+RISK-CWLS-104,竞品快速跟进手动模式功能,竞争,高,中,竞品在6个月内推出类似功能,申请实用新型专利+加快上市速度,产品经理,待处理,EV-CWLS-105,

@@ -291,7 +291,7 @@ Think Step by Step。每步有明确的输入、操作和检查点。
    | `source_grade` | A/B/C/D（按证据分级体系） |
    | `direct_quote` | 用户原话全文（不是概括或改写） |
    | `importance` | central/supporting/tangential |
-   | `related_doc` | `user_research_report` |
+   | `related_doc` | `10_用户研究与VOC分析报告` |
    | `related_section` | 报告中的章节号（如"5. VOC主题编码""7. 用户旅程"） |
    | `summary` | 一句话概括这条证据对研究的贡献（≤50字） |
    | `confidence` | 高/中/低 |
@@ -304,7 +304,7 @@ Think Step by Step。每步有明确的输入、操作和检查点。
    | `assumption_id` | `A-{project}-{seq}` |
    | `assumption` | 完整假设陈述 |
    | `category` | 用户 |
-   | `related_doc` | `user_research_report` |
+   | `related_doc` | `10_用户研究与VOC分析报告` |
    | `impact` | 高/中/低（如果假设错误对产品决策的影响程度） |
    | `confidence` | 高/中/低（假设本身成立的可能性） |
    | `validation_method` | 访谈/问卷/试用/数据验证/样机测试 — 具体方案（不能为空） |
@@ -337,7 +337,7 @@ Think Step by Step。每步有明确的输入、操作和检查点。
 
 | 文件 | 路径 | 写入时机 | 写入者 |
 |------|------|---------|--------|
-| 用户研究与VOC分析报告 | `output/{project}/user_research_report.md` | Step 6 | Researcher |
+| 用户研究与VOC分析报告 | `output/{project}/10_用户研究与VOC分析报告.md` | Step 6 | Researcher |
 | evidence.csv（追加） | `registers/evidence.csv` | Step 2 起流式写入 | Researcher |
 | assumptions.csv（追加） | `registers/assumptions.csv` | Step 3 起流式写入 | Researcher |
 

@@ -2,10 +2,12 @@
 
 > 将产品经理文档模版包的方法论，实现为可独立运行的 3-Agent 协作系统（Researcher / PM / Reviewer）。
 
+**📖 完整使用说明：[使用说明.md](使用说明.md)**
+
 ## 快速开始
 
-1. 加载 `AGENTS.md` 到 Claude Code（自动，通过 SessionStart hook）
-2. 新项目：触发 `hw-intake` → 引导式访谈 → 路由判定 → Gate 1 审批
+1. 确保已安装 Claude Code，`AGENTS.md` 会在会话启动时自动加载
+2. 新项目：对 Claude Code 说 **"帮我启动一个新项目"** → `hw-intake` 触发引导式访谈 → 路由判定 → Gate 1 审批
 3. 研究阶段：各 Researcher Skill 串行执行，产出研究报告 + evidence.csv
 4. 规划阶段：PM Skills 基于批准的研究报告产出产品文档
 5. 每个 Gate 前运行 `python3 validators/scripts/validate_registers.py` 确保台账完整性
@@ -14,11 +16,12 @@
 
 | 目录 | 用途 |
 |------|------|
-| `skills/` | 16 个 Agent Skills，按 Researcher / PM / Reviewer / Shared 分组 |
+| `skills/` | 16 个 Agent Skills（12,207 行），按 Researcher / PM / Reviewer / Shared 分组 |
 | `templates/` | 18 个 Markdown 文档模板 |
 | `registers/` | 7 个 CSV 台账，evidence.csv 是唯一真相源 |
 | `validators/` | JSON Schema + Python 确定性校验脚本（8 条规则） |
-| `adapters/feishu/` | Phase 3 飞书双向同步契约 |
+| `test/` | L1/L2/L3 三级 E2E 测试数据，全部校验通过 |
+| `adapters/feishu/` | Phase 3 飞书双向同步契约（暂缓） |
 | `docs/` | 设计文档：architecture.md v1.2 + pm-skills 方法论审计 |
 
 ## 实施阶段
@@ -26,10 +29,11 @@
 | Phase | 状态 | 内容 |
 |-------|------|------|
 | Phase 0 | ✅ 完成 | 目录结构、AGENTS.md、台账 Schema、Python 校验器、模板更新、SKILL_TEMPLATE.md |
-| Phase 1 | ⬜ 待开始 | L1 MVP — 8 个核心 Skills + 端到端测试 |
-| Phase 2 | ⬜ 待开始 | L2 + 完整 16 Skills + 跨项目学习 |
-| Phase 3 | ⬜ 待开始 | 飞书协作界面接入（双向同步 + 审批 + IM + Base） |
-| Phase 4 | ⬜ 待开始 | L3 + 独立应用封装 |
+| Phase 1 | ✅ 完成 | L1 MVP — 8 个核心 Skills + L1 E2E 测试（100% traceability） |
+| Phase 2 | ✅ 完成 | L2 — 8 个剩余 Skills + 27 契约问题修复 + L2 E2E 测试 |
+| L3 E2E | ✅ 完成 | 新品类全 11 文档流程验证（SWCR 智能窗户清洁机器人） |
+| Phase 3 | ⬜ 暂缓 | 飞书协作界面接入（双向同步 + 审批 + IM + Base） |
+| Phase 4 | ⬜ 暂缓 | 独立应用封装 |
 
 ---
 

@@ -18,64 +18,34 @@
 
 ## 线程二：Agent 架构设计 — 智能硬件 PM Agent
 
-> 设计版本：`PM-Agent-Design-v0.3`
+> 设计版本：`PM-Agent-Design-v1.0`
 > 方案文档：[docs/architecture.md](docs/architecture.md) v1.2
+> 使用说明：[使用说明.md](使用说明.md)
 > 飞书 Wiki：https://qcn5kzbeuy4o.feishu.cn/wiki/ZZtBwGYYQi7CawkVMxccpGc2nWb
 > GitHub：https://github.com/Yu-Jianwen/PM-Agent
 
-### 我们做了什么
+### 已完成
 
-**pm-skills 全量审计**：深度阅读 23/68 个 phuryn/pm-skills 的源码。提取了成熟 Skill 设计范式。结论：约 50% 方法论可复用，但输出模板需全部硬件化重写（四模块拆分、BOM、认证、供应链等维度）。
+**Phase 0 — 基础搭建**：目录结构、AGENTS.md（134 行）、SKILL_TEMPLATE.md（195 行）、3 个 JSON Schema + 3 个 Python 校验脚本（8 条确定性规则）、模板更新（合规+专利 2 个新增）
 
-**3-Agent 架构**：确定了 Researcher（5 skills）→ PM（7 skills）→ Reviewer（2 skills）+ 2 shared = 16 skills 的三层模型。
+**Phase 1 — L1 MVP**：8 个核心 Skills（5,420 行）+ L1 E2E 测试（CWLS 电机降本，4/4 100% traceability，8/8 校验通过）
 
-**Researcher 五个研究领域**：市场（含技术趋势+产业链）、用户（多角色链）、竞品（拆机+BOM+供应链）、合规（按 L1/L2/L3 分级）、专利（格局分析，不做法律判断）。
+**Phase 2 — L2 完整**：8 个剩余 Skills（6,787 行）+ 跨 Skill 契约审计（27 个问题发现并修复）+ L2 E2E 测试（CWLS 开窗机新 SKU，100% traceability，8/8 校验通过）
 
-**关键边界**：技术可行性评估属于开发团队（PRD 后），不是 Researcher 桌面研究。专利分析只做格局，不做 FTO 意见。
+**L3 E2E — 全流程**：SWCR 智能窗户清洁机器人，13 条 evidence + 7 个 Gate（全 approved）+ 12 requirements + 14 traceability + 3 method_learnings，8/8 校验通过
 
-**Researcher 双输出**：完整报告（给人）+ ≤500字摘要 + evidence.csv（给 PM Agent）。CSV 是权威记录，报告不能润色证据质量。PM 做输入检查时只看 CSV。
+**总交付**：16 Skills · 12,207 行 · 3 级 E2E 测试数据 · 使用说明.md
 
-**台账机制**：traceability.csv 为中心 JOIN 表。流式写入（证据/假设/风险），增量关联，Python 脚本做 8 条确定性校验。
+### 卡在哪
 
-**Feishu 定位修正**：飞书不是 Runtime，是"人机协作界面"。Claude Code 是唯一 Runtime。Feishu 提供文档双向同步、审批、IM 通知、Base 共享、任务同步。
-
-**market-deep-research v1.1.0 深度审计（新增）**：
-- 提取了 10 个可复用方法论，其中 5 个复用度 ≥90%：
-  - **证据分级体系 A/B/C/D** → evidence.csv 的 source_grade 字段
-  - **Falsifiable Claim 提取规则** → Researcher 的证据写入规范（5 条规则 + 4 种失败模式）
-  - **3-Lens 对抗性验证** → Reviewer 的 hw-review 新增 evidence 维度系统化方法
-  - **语义去重** → evidence.csv 写入前 fuzzy dedup
-  - **阶段审计模板** → 统一所有 Gate 的前置检查
-- 中国市场特殊注意事项（咨询报告冲突/政府 vs 行业/品牌自述/电商偏差/区域差异）直接适用
-
-**product-standards 深度审计（新增，替换之前的 gb-convert 误判）**：
-- 用户指出合规研究应参考 https://github.com/Yu-Jianwen/product-standards-skill
-- 这是一个完整的 4 阶段管道（Phase 0→1→Gate→2→3a→3b），不是简单的 PDF 转换工具
-- 核心资产：
-  - **32 合规模块清单**（9A 品类准入 + 19B 属性触发 + 4C 标识标签）
-  - **多 Agent 并行检索架构**（Analyst → GB_Retriever/TB_Retriever/SUPP_Retriever 并行 → Validator）
-  - **合规定级方法**（must/should/comply）+ 认证路径图
-  - **试验五要素输出**（方法/条件/设备/判定/样品）
-  - **PM 自然语言反馈机制**（PM 不编辑文件，Agent 更新 pm_action）
-  - **四级深度分级**（discover/comply/test/full）→ 映射到 L1/L2/L3 流程
-- hw-compliance-research 将以 product-standards 的管道架构为设计基础
-
-**Skill 设计范式更新**：从原来的 Purpose→Context→Instructions→Output→Best Practices→Further Reading，新增三个维度：Quality Bar（最低质量标准）、Operating Principles（操作原则）、Tool Integration（工具链集成）
-
-### 当前卡在哪
-
-1. 人类 PM 介入节点（Gate 位置）待确认
-2. 跨项目学习（method_learnings 自动检索）待设计
-3. 专利数据库接入方式待定
-4. PM Agent 分阶段 vs 一次加载待用户确认
+无阻塞项。Phase 0-2 + L3 全部完成。Phase 3（飞书集成）和 Phase 4（独立应用封装）由用户决定暂不执行。
 
 ### 下一步
 
-1. 确认开放问题
-2. 编写 AGENTS.md（Agent System Prompt）
-3. 编写 SKILL_TEMPLATE.md（含新增三个维度）
-4. 编写首批 Skills（Phase 1: 8 个 L1 核心 Skills）
-5. 迁移 mvp-1 校验器（含新增 fuzzy dedup 检查）
+1. 实际项目中使用 Agent 系统，收集反馈
+2. 根据反馈迭代 Skills 方法论
+3. 用户确认时机后启动 Phase 3 飞书集成
+4. 用户确认时机后启动 Phase 4 独立应用封装
 
 ### 踩过的坑
 

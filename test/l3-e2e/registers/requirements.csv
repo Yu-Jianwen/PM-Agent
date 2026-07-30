@@ -1,0 +1,13 @@
+requirement_id,requirement,source,priority,doc,owner,status,acceptance_criteria,related_evidence,notes
+REQ-SWCR-001,真空泵吸附力≥50kPa(光滑玻璃表面),竞品对标+安全,P0,PRD,硬件工程师,待开发,压力传感器测试3种玻璃表面均≥50kPa,EV-SWCR-003,
+REQ-SWCR-002,BOM成本≤¥450(量产1000台),成本目标,P0,PRD,采购+硬件,待确认,所有核心器件正式报价+PCB+外壳总成本≤¥450,EV-SWCR-013,
+REQ-SWCR-003,路径规划覆盖率≥95%(标准矩形窗),用户需求,P0,PRD,固件工程师,待开发,5种不同尺寸窗户各测10次，覆盖率均≥95%,EV-SWCR-002;EV-SWCR-006,
+REQ-SWCR-004,防跌落保护:检测到吸附力<30kPa时立即停机+报警,安全,P0,PRD,固件+硬件,待开发,模拟失压场景，响应时间≤500ms且无跌落,EV-SWCR-006,
+REQ-SWCR-005,电池续航≥45分钟(持续工作),用户需求,P0,PRD,硬件+电池供应商,待开发,满电状态下持续擦窗时间≥45分钟,EV-SWCR-008,
+REQ-SWCR-006,支持Wi-Fi+App远程控制和状态查看,竞品差异化,P1,PRD,固件+APP,待开发,App连接成功率≥99%，操控延迟≤500ms,EV-SWCR-004;EV-SWCR-009,
+REQ-SWCR-007,噪音≤65dB(A)@1m,用户需求,P1,PRD,硬件工程师,待开发,消声室测试噪音≤65dB(A),EV-SWCR-006,
+REQ-SWCR-008,通过CCC认证(GB 4706.1+GB 4706.7+GB 4343.1),合规,P0,PRD,质量+认证,待送检,取得CCC型式试验报告+CCC证书,EV-SWCR-007;EV-SWCR-010,
+REQ-SWCR-009,锂电池通过GB 31241安全测试,合规,P0,PRD,电池供应商+质量,待送检,取得电池安全检测报告,EV-SWCR-008,
+REQ-SWCR-010,Wi-Fi模组通过SRRC型号核准,合规,P1,PRD,硬件+认证,待送检,取得SRRC核准证书,EV-SWCR-009,
+REQ-SWCR-011,规避竞品A核心专利(真空吸附+路径规划组合),专利,P0,PRD,法务+硬件,待解决,专利律师出具FTO意见确认不侵权或完成规避设计,EV-SWCR-012,
+REQ-SWCR-012,整机防水等级≥IPX4(防溅水),用户需求,P1,PRD,结构+硬件,待开发,IPX4防水测试通过,EV-SWCR-002,

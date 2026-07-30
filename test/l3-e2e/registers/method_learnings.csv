@@ -1,0 +1,4 @@
+learning_id,source_project,source_stage,learning_type,learning,applies_to,not_applicable_to,recommended_template_change,owner,status,notes
+ML-SWCR-001,SWCR,L3市场研究,方法修正,新品类市场研究时，TAM/SAM/SOM估算方法需要从"对标现有品类"调整为"用户调研+类比渗透率+场景总量",所有L3新品类项目,L1降本/L2衍生项目,,PM,待处理,
+ML-SWCR-002,SWCR,L3合规研究,检查项,32合规模块中M05_motor(电机安全)和M04_battery(电池安全)在新品类合规中容易被遗漏，建议增加到L3强制检查清单,含电机+电池的产品,L1降本项目,,PM,待处理,
+ML-SWCR-003,SWCR,PRD编写,模板字段,硬件PRD模板中应增加"专利规避方案"章节(仅L3)，用于记录专利阻塞风险的规避设计和法务意见,L3新品类,,建议在05_PRD模板增加L3专属章节,PM,待处理,

@@ -1,0 +1,8 @@
+decision_id,decision,decision_type,date,owner,options_considered,rationale,related_evidence,status,notes
+DEC-SWCR-001,批准L3新品类路线,路由,2026-06-05,余健文,L1/L2/L3,智能窗户清洁机器人为新品类，无现有产品可衍生，需完整研究+合规+专利,EV-SWCR-001,approved,Gate 1
+DEC-SWCR-002,确认市场+用户研究充分,阶段审批,2026-07-10,余健文,批准/退回补充,市场增速35%+擦窗痛点明确(67%认为危险)+保洁B2B渠道有需求,EV-SWCR-001;EV-SWCR-002;EV-SWCR-005,approved,Gate 2
+DEC-SWCR-003,确认竞品理解充分,阶段审批,2026-07-15,余健文,批准/退回补充,竞品拆机确认技术路线+竞品B功能缺失=App+智能差异化窗口,EV-SWCR-003;EV-SWCR-004,approved,Gate 3
+DEC-SWCR-004,确认三定方向正确,阶段审批,2026-07-22,余健文,批准/退回补充,定目标市场=高层住宅窗户清洁/定差异化=App控制+智能路径+安全冗余,EV-SWCR-001;EV-SWCR-003;EV-SWCR-005;EV-SWCR-006,approved,Gate 4
+DEC-SWCR-005,确认商业可行性,阶段审批,2026-07-28,余健文,批准/退回补充,MRD/BRD分别输出:BOM成本目标¥450售价¥1699毛利率45%,EV-SWCR-013,approved,Gate 5
+DEC-SWCR-006,确认产品边界清晰,阶段审批,2026-08-03,余健文,批准/退回补充,MVP含真空吸附+路径规划+App控制；不含自动充电/多窗户间移动/语音控制,EV-SWCR-003;EV-SWCR-005;EV-SWCR-011,approved,Gate 6
+DEC-SWCR-007,确认可进入开发,阶段审批,2026-08-10,余健文,批准/退回补充,PRD四模块完整+traceability覆盖率100%+验证计划就绪+red-team完成,EV-SWCR-007;EV-SWCR-008;EV-SWCR-012,approved,Gate 7

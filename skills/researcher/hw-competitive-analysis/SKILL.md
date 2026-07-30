@@ -100,7 +100,7 @@ Think Step by Step。每一步包含输入、操作、检查点。
 ### Step 1: 加载竞品清单与上下文
 
 **输入**：
-- 读取 `output/{project}/market_study_report.md` 中 "4.3 看竞争" 章节
+- 读取 `output/{project}/01_产品市场与机会研究报告.md` 中 "4.3 看竞争" 章节
 - 提取：核心竞品清单（含类型、选择理由）、替代方案清单、待专项研究问题
 - 读取 `output/{project}/00_项目启动卡.md`（如有），提取目标市场、价格带、产品品类
 
@@ -349,7 +349,7 @@ assumption_id,assumption,category,related_doc,impact,confidence,validation_metho
 | confidence | 高/中/低（BOM 成本假设在中置信度以下，除非有供应商报价确认） |
 | validation_method | 验证方法（如"获取竞品B第二批次的拆解数据"、"向XX供应商询价确认"） |
 | owner | `Researcher` |
-| status | `open` / `validated` / `rejected` |
+| status | `待验证` / `已验证` / `已证伪` |
 
 ### 报告完整结构
 

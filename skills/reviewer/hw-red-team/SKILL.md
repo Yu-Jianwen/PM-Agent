@@ -287,7 +287,7 @@ PM 产出 PRD + 产品定义 → hw-review 审查文档质量 → 修正通过
      - `confidence`: 高/中/低（映射自 Uncertainty: critical→低, high→低, medium→中, low→高）
      - `validation_method`: 来自 Step 5 的最便宜验证方案（缩写成一行）
      - `owner`: 留空（由人类 PM 指定）
-     - `status`: `red_team_identified`（区别于 Researcher/PM 标记的假设）
+     - `status`: `待验证`（区别于 Researcher/PM 标记的假设）
      - `notes`: 标注"红队预-mortem 识别"，附验证方案的成功/失败标准摘要
   3. 将红队报告路径和新增假设的 assumption_id 列表返回给 PM Agent
 
@@ -295,7 +295,7 @@ PM 产出 PRD + 产品定义 → hw-review 审查文档质量 → 修正通过
   - [ ] 红队报告已保存到正确路径
   - [ ] 报告包含所有必需章节（见 Output Structure）
   - [ ] 新假设已追加写入 assumptions.csv，ID 无冲突
-  - [ ] 每条新假设的 status 为 `red_team_identified`
+  - [ ] 每条新假设的 status 为 `待验证`
   - [ ] 报告中有明确的"红队结论"章节（不做是否继续的决策声明）
 
 ## 5. Output Structure（输出结构）
@@ -464,13 +464,13 @@ _（共 Y 个 HIGH PRIORITY 假设）_
 每条新识别的假设追加一行到 `registers/assumptions.csv`：
 
 ```csv
-A-{project}-{seq},{假设陈述。我们假设 X。如果 X 不成立 → 产品因 Y 而失败},{市场/用户/技术/供应链/商业/合规},output/{project}/red_team_report.md,{高/中/低},{高/中/低},{Step 5 验证方法简述},,red_team_identified,红队预-mortem识别 | 成功标准:{简述} | 失败标准:{简述}
+A-{project}-{seq},{假设陈述。我们假设 X。如果 X 不成立 → 产品因 Y 而失败},{市场/用户/技术/供应链/商业/合规},output/{project}/red_team_report.md,{高/中/低},{高/中/低},{Step 5 验证方法简述},,待验证,红队预-mortem识别 | 成功标准:{简述} | 失败标准:{简述}
 ```
 
 **字段映射规则**：
 - `impact` ← Lethality: critical→高, high→高, medium→中, low→低
 - `confidence` ← Uncertainty: critical→低, high→低, medium→中, low→高
-- `status`: 固定为 `red_team_identified`（区别于 Researcher 或 PM 标记的假设）
+- `status`: 固定为 `待验证`（区别于 Researcher 或 PM 标记的假设）
 - `validation_method`: 从 Step 5 验证方案的"方法"字段缩写成一行
 - `notes`: 包含来源标注 + 成功/失败标准摘要
 
@@ -492,7 +492,7 @@ A-{project}-{seq},{假设陈述。我们假设 X。如果 X 不成立 → 产品
 
 - [ ] **已知风险不重复**：报告中不出现 risks.csv 中已有登记且已包含 mitigation 的风险。如果出现，说明 Step 1 的已知风险排除不彻底。
 
-- [ ] **新假设正确落盘**：所有 source=newly_identified 的假设已写入 assumptions.csv，status 字段为 `red_team_identified`，ID 无冲突，字段映射正确。
+- [ ] **新假设正确落盘**：所有 source=newly_identified 的假设已写入 assumptions.csv，status 字段为 `待验证`，ID 无冲突，字段映射正确。
 
 - [ ] **可追溯性**：每个杀伤性假设可以追溯到具体的预-mortem 失败场景；每个失败场景可以追溯到产品成功逻辑链的关键节点。链路断裂的假设需要重新审视。
 
@@ -599,7 +599,7 @@ A-{project}-{seq},{假设陈述。我们假设 X。如果 X 不成立 → 产品
 
 ### 关联台账
 
-- `registers/assumptions.csv` — 假设台账（本 Skill 读取已有假设 + 追加新识别假设；status 字段区分为 `red_team_identified`）
+- `registers/assumptions.csv` — 假设台账（本 Skill 读取已有假设 + 追加新识别假设；status 字段区分为 `待验证`）
 - `registers/evidence.csv` — 证据台账（本 Skill 用于评估假设的 Uncertainty 评分）
 - `registers/risks.csv` — 风险台账（本 Skill 读取以排除已知风险，避免重复）
 - `registers/requirements.csv` — 需求台账（本 Skill 读取以构建产品成功逻辑链）

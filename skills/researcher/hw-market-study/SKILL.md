@@ -17,7 +17,7 @@ description: 产品市场与机会研究。当 Gate 1 批准后、需要理解�
 - 需要回答"值不值得做"而非"怎么做"
 
 ### 前置条件
-- `project_profile.json` 或项目启动卡文档已生成
+- `00_项目启动卡.md` 已生成
 - Gate 1 审批记录可读
 - `registers/evidence.csv` 已初始化（至少包含 CSV header 行）
 - `registers/assumptions.csv` 已初始化
@@ -75,7 +75,7 @@ description: 产品市场与机会研究。当 Gate 1 批准后、需要理解�
   1. 提取目标市场（地区）、产品品类、技术关键词、初步竞品线索
   2. 提取项目路由等级（L1/L2/L3），决定研究深度
   3. 提取启动卡中已有的行业线索（市场规模引用、政策提示、供应链线索）
-  4. 确定输出路径：`output/{project_name}/01_产品市场与机会研究报告.md`
+  4. 确定输出路径：`output/{project}/01_产品市场与机会研究报告.md`
 - **检查点**：
   - 至少确定 3 个可检索维度（行业/客户/竞争/自身中任意三选）
   - 项目名称已确定，可用于构造 evidence ID（`EV-{project}-{seq}`）
@@ -292,7 +292,7 @@ description: 产品市场与机会研究。当 Gate 1 批准后、需要理解�
 
 | 文件 | 路径 | 格式 | 写入时机 |
 |------|------|------|---------|
-| 市场研究报告 | `output/{project_name}/01_产品市场与机会研究报告.md` | Markdown | Step 12 一次性生成 |
+| 市场研究报告 | `output/{project}/01_产品市场与机会研究报告.md` | Markdown | Step 12 一次性生成 |
 | 证据记录 | `registers/evidence.csv` | CSV（追加行） | Steps 4-10 流式写入 |
 | 假设记录 | `registers/assumptions.csv` | CSV（追加行） | Steps 4-10 发现未验证判断时写入 |
 

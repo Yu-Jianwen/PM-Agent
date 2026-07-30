@@ -95,7 +95,7 @@ Think Step by Step。每步有明确的输入、操作和检查点。
 ### Step 1: 加载用户 Segments 和市场研究上下文
 
 **输入**：
-- `output/{project}/market_study_report.md` — 市场研究报告全文
+- `output/{project}/01_产品市场与机会研究报告.md` — 市场研究报告全文
 - `registers/evidence.csv` — 查找市场研究中与用户相关的 evidence 记录
 - 项目启动卡 — 获取项目代号 `{project}`、产品品类、目标市场
 
@@ -309,7 +309,7 @@ Think Step by Step。每步有明确的输入、操作和检查点。
    | `confidence` | 高/中/低（假设本身成立的可能性） |
    | `validation_method` | 访谈/问卷/试用/数据验证/样机测试 — 具体方案（不能为空） |
    | `owner` | Researcher |
-   | `status` | open |
+   | `status` | 待验证 |
    | `notes` | 为什么无法找到 evidence、预计何时可验证 |
 
 3. 按 Output Structure（第 5 节）的完整模板撰写报告
@@ -354,7 +354,7 @@ Think Step by Step。每步有明确的输入、操作和检查点。
 > 版本：v1.0
 > 日期：YYYY-MM-DD
 > 作者：Researcher Agent
-> 上游输入：市场研究报告 `output/{project}/market_study_report.md`
+> 上游输入：市场研究报告 `output/{project}/01_产品市场与机会研究报告.md`
 
 ---
 
@@ -595,9 +595,9 @@ P0: ≥80; P1: 50-79; P2: 25-49; P3: <25.
 
 | 输入项 | 状态 | 来源/证据 | 对结论的影响 | 处理方式 |
 |--------|------|----------|------------|---------|
-| 市场研究报告 — 候选用户人群 | ✅ 已加载 | `output/{project}/market_study_report.md` | 研究起点的用户假设 | 逐 segment 验证/细化/推翻 |
-| 市场研究报告 — 场景假设 | ✅ 已加载 | `output/{project}/market_study_report.md` | 决定 VOC 收集的方向 | 在用户旅程中逐场景验证 |
-| 市场研究报告 — 待验证问题 | ✅ 已加载 | `output/{project}/market_study_report.md` | 决定研究的焦点 | 逐条回答（已验证/未验证/推翻） |
+| 市场研究报告 — 候选用户人群 | ✅ 已加载 | `output/{project}/01_产品市场与机会研究报告.md` | 研究起点的用户假设 | 逐 segment 验证/细化/推翻 |
+| 市场研究报告 — 场景假设 | ✅ 已加载 | `output/{project}/01_产品市场与机会研究报告.md` | 决定 VOC 收集的方向 | 在用户旅程中逐场景验证 |
+| 市场研究报告 — 待验证问题 | ✅ 已加载 | `output/{project}/01_产品市场与机会研究报告.md` | 决定研究的焦点 | 逐条回答（已验证/未验证/推翻） |
 | 电商评论数据 | ✅ 已采集 / ⚠️ 部分缺失 / ❌ 缺失 | [平台名称]，[N] 条 | | 主题编码 + 证据写入 |
 | 社媒讨论数据 | | | | |
 | 售后工单数据 | | | | |

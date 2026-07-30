@@ -21,7 +21,7 @@ description: >
 ## 2. Context（上下文/适用场景）
 
 ### 触发条件
-- PRD（05_PRD_产品需求文档.md）已通过 Reviewer 审查并获得人工 Gate 批准
+- PRD（PRD_产品需求文档.md）已通过 Reviewer 审查并获得人工 Gate 批准
 - `registers/assumptions.csv` 中存在 confidence=高 的记录
 - `registers/risks.csv` 中存在需要验证缓解效果的风险记录
 - `registers/requirements.csv`（由 hw-prd 产出）中 P0/P1 需求已确定
@@ -69,7 +69,7 @@ bench test 对应性能和功能、field test 对应真实环境、certification
 ### Step 1: 加载项目上下文与输入文件
 
 - **输入**：
-  - `05_PRD_产品需求文档.md` — 提取产品名称、目标市场、P0/P1 需求列表
+  - `PRD_产品需求文档.md` — 提取产品名称、目标市场、P0/P1 需求列表
   - `registers/assumptions.csv` — 加载全部假设记录
   - `registers/risks.csv` — 加载全部风险记录
   - `registers/requirements.csv` — 加载全部需求记录，过滤 P0 和 P1
@@ -285,7 +285,7 @@ T-{project}-{seq},,{市场需要描述},,REQ-{project}-{seq},VI-{project}-{seq},
 对 Step 2 中补充了验证方法的高置信度假设，更新 `validation_method` 字段：
 
 ```csv
-A-{project}-001,{假设原文},{category},{related_doc},{impact},高,{新设计的验证方法},{owner},open,验证计划阶段补充验证方法
+A-{project}-001,{假设原文},{category},{related_doc},{impact},高,{新设计的验证方法},{owner},待验证,验证计划阶段补充验证方法
 ```
 
 ## 6. Quality Bar（最低质量标准）
@@ -362,7 +362,7 @@ A-{project}-001,{假设原文},{category},{related_doc},{impact},高,{新设计�
 
 ### 关联模板
 - `06_验证计划.md` — 验证计划输出模板（本文档第 5 节已包含完整模板）
-- `05_PRD_产品需求文档.md` — PRD 模板，包含验收标准定义
+- `PRD_产品需求文档.md` — PRD 模板，包含验收标准定义
 - `04_产品定义文档.md` — 产品定义模板，包含关键假设来源
 
 ### 关联台账

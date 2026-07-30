@@ -44,7 +44,7 @@ L1 项目不经过本 Skill（L1 裁剪了 MRD/BRD 阶段，市场需求和商�
 
 ### 输入
 
-- 产品规划报告（`output/{project}/产品规划报告.md`）
+- 产品规划报告（`output/{project}/14_产品规划报告.md`）
 - `registers/evidence.csv`（市场、用户、竞品相关 evidence 记录）
 - `registers/assumptions.csv`（产品规划阶段标记的假设）
 - `registers/risks.csv`（已识别的风险）
@@ -133,7 +133,7 @@ MRD 和 BRD 之间的市场判断、用户定义、竞品结论必须一致。�
 
 **输入**：
 - 读取 `output/{project}/00_项目启动卡.md` 第 1 节，获取 `route_level`（L2 或 L3）
-- 读取产品规划报告（`output/{project}/产品规划报告.md` 或等价文件）
+- 读取产品规划报告（`output/{project}/14_产品规划报告.md` 或等价文件）
 - 读取 `registers/evidence.csv` 中与本项目相关的 evidence 记录（按 project 字段筛选）
 - 读取 `registers/assumptions.csv` 中与本项目相关的 assumption 记录
 - 读取 `registers/risks.csv` 中与本项目相关的 risk 记录

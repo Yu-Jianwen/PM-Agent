@@ -17,7 +17,7 @@ description: 产品合规研究。当 Gate 1 批准后路由为 L2+、需要确�
 - L1（降本/衍生）路由不触发本 Skill —— L1 产品的合规要求在原有产品上已满足，仅在 hw-market-study 的 Step 4 中做简要政策扫描
 
 ### 前置条件
-- `project_profile.json` 或 product_profile 文档已生成，32 合规模块激活状态已完成初步判定
+- `00_项目启动卡.md` 已生成，32 合规模块激活状态已完成初步判定
 - Gate 1 审批记录可读，路由等级已确认
 - `registers/evidence.csv` 已初始化（至少包含 CSV header 行）
 - `registers/assumptions.csv` 已初始化
@@ -76,13 +76,13 @@ Think Step by Step。每步含输入、操作、检查点。
 
 ### Step 1：加载项目上下文与产品画像
 
-- **输入**：读取 product_profile 文档（含 product_profile.json 或 project_profile.json）、Gate 1 审批记录、hw-market-study 报告中"4.1.1 政策与监管研究"章节
+- **输入**：读取项目启动卡文档（`00_项目启动卡.md`）、Gate 1 审批记录、hw-market-study 报告中"4.1.1 政策与监管研究"章节
 - **操作**：
   1. 提取产品名称、产品品类、目标市场列表（中国市场 + 出口市场）
   2. 提取产品关键属性：供电方式（电池/市电/两者）、通信方式（无/Wi-Fi/BLE/Zigbee/蜂窝）、是否含电机/加热/激光/电池/传感器、目标用户（儿童/成人/通用）
   3. 提取项目路由等级（L2/L3），决定合规研究深度：L2 → 至少覆盖 discover + comply；L3 → 覆盖 discover + comply + test（Phase 0-2 + Phase 3a）
   4. 从 hw-market-study 的"认证要求清单"中提取已有的认证类型、典型周期、状态标记
-  5. 确定输出路径：`output/{project_name}/17_产品合规研究报告.md`
+  5. 确定输出路径：`output/{project}/17_产品合规研究报告.md`
 - **检查点**：
   - 产品品类、目标市场、供电方式、通信方式 4 项全部提取
   - L2/L3 路由已确认，合规研究深度已确定
@@ -346,7 +346,7 @@ Think Step by Step。每步含输入、操作、检查点。
 
 | 文件 | 路径 | 格式 | 写入时机 |
 |------|------|------|---------|
-| 合规研究报告 | `output/{project_name}/17_产品合规研究报告.md` | Markdown | Step 8 一次性生成 |
+| 合规研究报告 | `output/{project}/17_产品合规研究报告.md` | Markdown | Step 8 一次性生成 |
 | 证据记录 | `registers/evidence.csv` | CSV（追加行） | Steps 4-5 流式写入（每条标准对应一条 evidence） |
 | 假设记录 | `registers/assumptions.csv` | CSV（追加行） | Steps 2, 5-6 发现 uncertain 或未验证判断时写入 |
 
@@ -506,11 +506,11 @@ SRRC获证        ██
 
 | 输入项 | 来源文档/证据 | 状态 | 对合规判断影响 | 缺口处理 |
 |--------|-------------|------|--------------|---------|
-| 产品画像 | product_profile.json | 已完成 / 阶段性 / 缺失 | 高 / 中 / 低 | |
+| 产品画像 | 00_项目启动卡.md | 已完成 / 阶段性 / 缺失 | 高 / 中 / 低 | |
 | 标准检索 | standards_map（本报告第 2 节） | | | |
 | 竞品合规参考 | hw-competitive-analysis 输出 | | | |
 | 市场准入线索 | hw-market-study 第 4.1.1 节 | | | |
-| project_profile.json | hw-intake 输出 | | | |
+| 00_项目启动卡.md | hw-intake 输出 | | | |
 | Gate 1 审批记录 | Gate 1 审批 | | | |
 
 ---

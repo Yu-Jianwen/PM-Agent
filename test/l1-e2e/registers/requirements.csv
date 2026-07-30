@@ -1,0 +1,5 @@
+requirement_id,requirement,source,priority,doc,owner,status,acceptance_criteria,related_evidence,notes
+REQ-CWLS-001,电机额定扭矩≥0.45N·m,竞品对标,P0,PRD,硬件工程师,待开发,测功机测试扭矩≥0.45N·m,EV-CWLS-002,
+REQ-CWLS-002,电机单价≤¥70/台（批量1000台）,成本目标,P0,PRD,采购,待确认,供应商正式报价单≤¥70,EV-CWLS-001;EV-CWLS-005,
+REQ-CWLS-003,电机噪音≤45dB(A)@1m,用户需求,P1,PRD,硬件工程师,待开发,消声室测试噪音≤45dB(A),EV-CWLS-004,
+REQ-CWLS-004,电机效率≥78%,性能基线,P1,PRD,硬件工程师,待开发,额定负载下效率≥78%,EV-CWLS-003,

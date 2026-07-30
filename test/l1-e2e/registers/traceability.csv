@@ -1,0 +1,6 @@
+trace_id,research_finding,market_need,product_definition,requirement_id,validation_item,evidence_id,status,notes
+T-CWLS-001,竞品B电机扭矩0.5N·m,开窗机需要足够扭矩驱动链条,,REQ-CWLS-001,测功机测试,EV-CWLS-002,linked,
+T-CWLS-002,替代电机成本¥65 vs 指定电机¥85,降本目标23.5%,,REQ-CWLS-002,供应商报价确认,EV-CWLS-001,linked,
+T-CWLS-003,替代电机成本¥65/台,,,REQ-CWLS-002,供应商报价确认,EV-CWLS-005,linked,
+T-CWLS-004,12/47用户提到噪音问题,用户对静音有明确需求,,REQ-CWLS-003,消声室噪音测试,EV-CWLS-004,linked,
+T-CWLS-005,替代电机效率80%可接受,效率在可接受范围,,REQ-CWLS-004,效率测试,EV-CWLS-003,linked,

@@ -1,0 +1,3 @@
+assumption_id,assumption,category,related_doc,impact,confidence,validation_method,owner,status,notes
+A-CWLS-001,替代电机批量和指定电机一致,供应链,01_市场研究报告,高,中,获取替代电机供应商量产能力证明,采购,待验证,
+A-CWLS-002,电机降本后其他BOM项不变,成本,05_PRD,高,高,逐项确认BOM其他物料价格无变化,硬件工程师,待验证,

@@ -102,7 +102,7 @@ Think Step by Step。每一步包含输入、操作、检查点。
 **输入**：
 - 读取 `output/{project}/market_study_report.md` 中 "4.3 看竞争" 章节
 - 提取：核心竞品清单（含类型、选择理由）、替代方案清单、待专项研究问题
-- 读取 `output/{project}/project_profile.json`（如有），提取目标市场、价格带、产品品类
+- 读取 `output/{project}/00_项目启动卡.md`（如有），提取目标市场、价格带、产品品类
 
 **操作**：
 1. 将竞品清单整理为研究计划表，逐竞品分配研究深度（桌面/购买/安装/拆机/BOM/售后）

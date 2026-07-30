@@ -27,7 +27,7 @@ description: >
 
 ### 前置条件
 - 项目启动卡已就绪（含项目代号 `{project}`）
-- 市场研究报告 `output/{project}/market_study_report.md` 已存在，包含：
+- 市场研究报告 `output/{project}/01_产品市场与机会研究报告.md` 已存在，包含：
   - 候选用户人群描述（至少 1 个 segment）
   - 核心场景假设（至少 2 个）
   - 待验证问题（VOC 线索）

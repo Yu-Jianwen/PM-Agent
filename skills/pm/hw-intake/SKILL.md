@@ -495,10 +495,10 @@ Intent Card 格式：
 
 ## 8. 风险登记
 
-| 风险编号 | 风险描述 | 严重度 | 可能性 | 触发条件 | 缓解措施 |
-|----------|----------|--------|--------|----------|----------|
-| RISK-{project}-001 | {风险描述，≤2 句话} | high / medium / low | high / medium / low | {触发此风险的条件} | {缓解措施} |
-| RISK-{project}-002 | {风险描述} | high / medium / low | high / medium / low | {触发条件} | {缓解措施} |
+| risk_id | risk | category | probability | impact | trigger | mitigation |
+|----------|------|----------|-------------|--------|---------|------------|
+| RISK-{project}-001 | {风险描述，≤2 句话} | 市场/用户/技术/供应链/认证/质量/售后/商业 | high / medium / low | high / medium / low | {触发此风险的条件} | {缓解措施} |
+| RISK-{project}-002 | {风险描述} | | high / medium / low | high / medium / low | {触发条件} | {缓解措施} |
 | ... | ... | ... | ... | ... | ... |
 
 ## 9. Gate 1 状态

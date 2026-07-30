@@ -1,0 +1,3 @@
+risk_id,risk,category,probability,impact,trigger,mitigation,owner,status,related_evidence,notes
+RISK-CWLS-001,替代电机供应商产能不足,供应链,中,高,供应商无法满足月需求量,提前确认产能+备选第二供应商,采购,待处理,EV-CWLS-005,
+RISK-CWLS-002,替代电机噪音超标,技术,低,高,消声室测试噪音>45dB(A),先做样品噪音验证再决定,硬件工程师,待处理,EV-CWLS-004,

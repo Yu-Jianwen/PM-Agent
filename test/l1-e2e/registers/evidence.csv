@@ -1,0 +1,6 @@
+evidence_id,title,source_type,source_name,url_or_path,date_collected,source_grade,direct_quote,importance,related_doc,related_section,summary,confidence,notes
+EV-CWLS-001,电机供应商A报价,供应商报价,1688供应商A,,2026-07-01,C,"XX牌电机单价¥85/台，MOQ 1000台",central,01_市场研究报告,3.2 供应链,指定电机成本¥85，替代方案成本可降至¥65,高,
+EV-CWLS-002,竞品B电机规格,竞品拆机,竞品B拆机报告,,2026-06-28,B,"拆机发现竞品B使用XX型号电机，额定扭矩0.5N·m",central,09_竞品研究报告,2.1 拆机分析,竞品B电机性能与指定电机相当，成本更低,高,
+EV-CWLS-003,电机性能测试数据,第三方检测,SGS检测报告,,2026-06-15,A,"指定电机在额定负载下效率82%，替代电机效率80%",supporting,01_市场研究报告,5.1 性能对比,替代电机效率略低2%，但在可接受范围内,高,
+EV-CWLS-004,开窗机用户评论分析,电商评论,京东评论,,2026-06-20,C,"收集到47条有效评论，其中12条提到'电机噪音大'",supporting,10_用户研究报告,3.1 VOC分析,噪音是用户Top 3痛点之一,中,
+EV-CWLS-005,电机供应商B报价,供应商报价,1688供应商B,,2026-07-02,C,"XX牌电机替代型号单价¥65/台，MOQ 500台",central,01_市场研究报告,3.2 供应链,替代电机成本降低23.5%，且MOQ更低,高,

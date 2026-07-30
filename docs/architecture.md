@@ -1,65 +1,20 @@
 # 智能硬件 PM Agent — 完整实施方案
 
-> 版本：v1.0
+> 版本：v1.1
 > 日期：2026-07-30
 > 状态：设计定案，待实施
 
 ---
 
-## 一、全面 Review
+## 一、整体架构
 
-### 1.1 已覆盖的内容
-
-- 3-Agent 架构（Researcher/PM/Reviewer）
-- 16 个 Skills 清单和分工
-- 5 个研究领域（市场/用户/竞品/合规/专利）
-- 串行文档流 + 人工门径机制
-- 报告内嵌摘要 + CSV 为唯一真相源
-- 台账机制（7 个 CSV，traceability 为中心 JOIN 表）
-- 跨项目学习机制
-- pm-skills 审计结论和改造策略
-- Runtime 可移植性设计
-
-### 1.2 识别的遗漏（已补充进方案）
-
-| # | 遗漏项 | 优先级 |
-|---|--------|--------|
-| 1 | System Prompt 详细设计（AGENTS.md 内容结构） | P0 |
-| 2 | Agent 间通信协议（Researcher→PM→Reviewer 数据契约） | P0 |
-| 3 | 项目初始化/脚手架（新项目创建需要的文件和初始台账） | P0 |
-| 4 | 模块打包结构（目录组织、模块边界、接口定义） | P0 |
-| 5 | Reviewer 对研究报告的审查（之前只讨论了审 PM 产出） | P0 |
-| 6 | 任务包生成（hw-intake 路由批准后生成任务清单） | P1 |
-| 7 | 复盘 + 下游交付 Skill（hw-retro、hw-handoff 补充） | P1 |
-| 8 | 错误状态和恢复机制 | P1 |
-| 9 | Feishu 集成架构（与 Claude Code MVP 的模块边界） | P1 |
-
-### 1.3 实施过程中完善的细节
-
-- 每个 SKILL.md 的具体措辞和示例
-- 校验器的具体错误消息格式
-- CSV 字段级别的验证规则细节
-- 测试用例的具体内容
-- 专利分析工具的具体选型
-
----
-
-## 二、整体架构
-
-### 2.1 模块化设计
+### 1.1 模块化设计
 
 ```mermaid
 flowchart TB
-    subgraph Adapters["Runtime Adapters 适配层"]
-        CC["Claude Code<br/>AGENTS.md"]
-        FS["Feishu<br/>Base/Docs/Approval"]
-        FUTURE["未来: API Server / Web UI / Dagu"]
-    end
-
-    subgraph Orch["Orchestration Module 编排层"]
-        SM["Process State Machine<br/>L1/L2/L3 Flow"]
-        GATE["Gate Definitions<br/>Human Intervention"]
-        DAG["Task DAG<br/>Dependencies"]
+    subgraph Runtime["Agent Runtime 运行环境"]
+        CC["Claude Code（当前）"]
+        FUTURE["未来: 独立 Agent Runtime"]
     end
 
     subgraph Core["Agent Core 核心层"]
@@ -67,58 +22,120 @@ flowchart TB
         ROLE["Role Definitions<br/>Researcher / PM / Reviewer"]
         RULES["Quality Rules<br/>Methodology"]
         ROUTER["Skill Router"]
-        CONTRACT["Agent Contracts"]
     end
 
     subgraph Agents["Agent Skills 执行层"]
-        R["Researcher<br/>Skills ×5"]
-        P["PM<br/>Skills ×7"]
-        V["Reviewer<br/>Skills ×2"]
+        R["Researcher ×5"]
+        P["PM ×7"]
+        V["Reviewer ×2"]
     end
 
     subgraph Data["Templates & Registers 数据层"]
-        TPL["17 Templates<br/>Markdown"]
-        CSV["7 CSV Schemas"]
-        JS["JSON Schema"]
-        PY["Python Validators"]
+        TPL["17 Templates"]
+        REG["7 CSV Schemas"]
+        VAL["Python Validators"]
     end
 
-    Adapters -->|"翻译 Agent 定义"| Orch
-    Orch -->|"调度 Skills"| Core
-    Core --> R
-    Core --> P
-    Core --> V
-    R -->|"读写"| Data
-    P -->|"读写"| Data
-    V -->|"读写"| Data
+    subgraph FeishuAdapter["Feishu Adapter 双向同步"]
+        DOCSYNC["文档同步<br/>Markdown ↔ 飞书文档"]
+        APPROVALSYNC["审批同步<br/>Gate 请求 ↔ 飞书审批"]
+        NOTIFYSYNC["通知同步<br/>事件 → IM 卡片"]
+        BASESYNC["数据同步<br/>CSV ↔ 飞书 Base"]
+        TASKSYNC["任务同步<br/>任务包 ↔ 飞书任务"]
+    end
+
+    subgraph Feishu["Feishu 人机协作界面"]
+        DOCS["飞书文档<br/>人类PM 阅读/评论/修改"]
+        APPROVAL["飞书审批<br/>人工 Gate 决策"]
+        IM["飞书消息<br/>通知/提醒/快捷操作"]
+        BASE["飞书 Base<br/>共享项目状态/任务/台账"]
+        TASK["飞书任务<br/>人类待办"]
+    end
+
+    Runtime --> Core
+    Core --> Agents
+    Agents --> Data
+    Agents --> FeishuAdapter
+    FeishuAdapter --> DOCS
+    FeishuAdapter --> APPROVAL
+    FeishuAdapter --> IM
+    FeishuAdapter --> BASE
+    FeishuAdapter --> TASK
 ```
 
-### 2.2 模块接口
+### 1.2 飞书的定位：人机协作界面，不是 Runtime
+
+飞书不是 Agent 的替代运行环境。Claude Code（以及未来的独立 Agent Runtime）才是 Agent 运行的地方。
+
+飞书的角色是 **AI 与人类 PM 之间的双向协作界面**：
+
+| 能力 | 方向 | 场景 |
+|------|------|------|
+| **飞书文档** | AI → 人 → AI | AI 写完报告同步到飞书文档 → 人类 PM 阅读、评论、直接修改 → AI 读取反馈后继续工作 |
+| **飞书审批** | AI → 人 → AI | AI 完成阶段产出 → 发起 Gate 审批请求 → 人类 PM 批准/退回/有条件批准 → AI 接收决策写入 decisions.csv |
+| **飞书消息** | AI → 人 | Reviewer 发现 blocker → 推送 IM 卡片给 PM；Gate 审批请求 → 通知审批人；任务逾期 → 发送提醒 |
+| **飞书 Base** | AI ↔ 人 | 项目状态、任务清单、台账数据在 Base 和本地 CSV 之间双向同步，人和 AI 都可见可操作 |
+| **飞书任务** | AI → 人 | AI 拆解的任务包同步为人类 PM 的飞书个人待办，带截止时间和依赖关系 |
+
+### 1.3 关键交互流程
+
+#### 文档协作流
+
+```
+AI 完成研究 → 同步到飞书文档（草稿状态）
+  → 人类 PM 在飞书中阅读、评论、修改
+  → AI 检测到飞书文档更新 → 拉取变更
+  → AI 合并人类修改（人类修改优先）
+  → 更新本地 Markdown → 继续下一步
+```
+
+#### Gate 审批流
+
+```
+AI 完成阶段 → 生成 Gate 摘要 → 同步到飞书文档
+  → AI 发起飞书审批（附带文档链接 + 决策选项）
+  → 人类 PM 在飞书中审批（批准/退回/有条件批准）
+  → AI 收到审批结果 → 写入 decisions.csv
+  → 批准 → 进入下一阶段
+  → 退回 → 根据退回原因修正 → 重新提交
+```
+
+#### 通知流
+
+```
+Reviewer 发现 blocker finding
+  → AI 生成 IM 卡片（含 finding 摘要 + 飞书文档链接）
+  → 推送给 PM
+  → PM 点击卡片直达文档 → 处理问题
+```
+
+### 1.4 模块接口
 
 | 模块 | 输入 | 输出 | 依赖 |
 |------|------|------|------|
-| **Agent Core** | 项目方法论（模板包内容） | System Prompt、角色定义、质量规则、技能路由表 | 无 |
-| **Skills** | Agent Core（角色+规则）、Templates（输出格式）、Registers（数据写入） | 研究报告、产品文档、台账记录 | Agent Core, Templates & Registers |
-| **Templates & Registers** | 模板包（已有） | Markdown 模板、CSV Schema、JSON Schema、校验脚本 | 无（数据层） |
-| **Orchestration** | Agent Core（流程规则）、Gate 定义 | 状态机、任务依赖、人工节点 | Agent Core |
-| **Runtime Adapters** | Agent Core、Orchestration | Runtime 特定配置（AGENTS.md / Feishu Base 表结构等） | Agent Core, Orchestration |
+| **Agent Core** | 项目方法论 | System Prompt、角色定义、质量规则、技能路由表 | 无 |
+| **Agent Skills** | Agent Core + Templates + Registers | 研究报告、产品文档、台账记录 | Agent Core, Data |
+| **Data** | 模板包 | Markdown 模板、CSV Schema、校验脚本 | 无 |
+| **Feishu Adapter** | Agent 产出 + 飞书事件 | 同步内容 + 人类反馈 | Agent Skills, 飞书 API |
+| **Feishu 界面** | AI 推送 | 人类评论/修改/审批决策 | 无 |
 
-### 2.3 关键设计原则
+### 1.5 关键设计原则
 
-1. **Skills 不直接依赖 Runtime**：Skills 通过 Agent Core 定义的契约工作，不感知 Claude Code 还是 Feishu
-2. **Templates & Registers 是纯数据层**：不包含执行逻辑，可被任何模块读取
-3. **Orchestration 与 Runtime 分离**：流程状态机是纯逻辑，Runtime Adapter 负责将状态映射到具体平台
-4. **模块间通过 ID 引用通信**：不传递完整文档，传递 artifact_id + version + hash
+1. **Agent 是核心，飞书是界面**：Agent 不依赖飞书运行（Phase 1-2 纯本地），飞书接入后 Agent 逻辑不变
+2. **双向同步，不是单向发布**：AI 推送文档到飞书，人类在飞书中修改后 AI 拉回更新
+3. **人类修改优先**：当本地版本和飞书版本冲突时，人类在飞书中的修改为准（人类是最终决策者）
+4. **审批是飞书原生能力**：不自己实现审批流，使用飞书审批作为 Gate 机制
+5. **通知驱动行动**：AI 主动推送审批请求和 blocker 通知，人类不用轮询检查
 
 ---
 
-## 三、完整流程（串行 + 人工门径）
+## 二、完整流程（串行 + 人工门径）
 
 ```mermaid
 flowchart TD
     START["项目启动"] --> INTAKE["hw-intake<br/>引导式访谈 → 路由判定 L1/L2/L3"]
-    INTAKE --> GATE1{"Gate 1<br/>人工审批路由"}
-    GATE1 -->|"批准"| MARKET["Researcher: hw-market-study<br/>产品市场与机会研究报告<br/>输出候选用户+核心竞品初筛"]
+    INTAKE --> GATE1{"Gate 1: 人工审批路由"}
+    GATE1 -->|"批准"| MARKET["Researcher: hw-market-study<br/>产品市场与机会研究报告"]
     GATE1 -->|"退回"| INTAKE
 
     MARKET --> GATE2{"人工审核"}
@@ -161,12 +178,12 @@ flowchart TD
 **关键规则**：
 - 路由判定在项目启动时完成，不在研究之后
 - 每个文档产出前必须经过 Reviewer 审核 + 人类 PM 审批
-- 报告之间有输入输出依赖（对齐 00A 文档关系），不存在一次性加载
+- 报告之间有输入输出依赖（对齐 00A 文档关系）
 - 人类 PM 是门径的最终守门员
 
 ---
 
-## 四、Researcher 研究领域
+## 三、Researcher 研究领域
 
 | 领域 | 产出 | 说明 |
 |------|------|------|
@@ -180,9 +197,9 @@ flowchart TD
 
 ---
 
-## 五、Skills 完整清单（16 个）
+## 四、Skills 完整清单（16 个）
 
-### 5.1 Researcher Skills（5 个）
+### 4.1 Researcher Skills（5 个）
 
 | # | Skill | 输入 | 输出 | 写入台账 |
 |---|-------|------|------|---------|
@@ -192,26 +209,26 @@ flowchart TD
 | R4 | `hw-compliance-research` | 目标市场、产品类型 | 产品合规研究报告（含摘要 + 输入来源表） | evidence.csv, assumptions.csv |
 | R5 | `hw-patent-analysis` | 关键技术领域、竞品清单 | 专利格局分析报告（含摘要 + 输入来源表） | evidence.csv, assumptions.csv |
 
-### 5.2 PM Skills（7 个）
+### 4.2 PM Skills（7 个）
 
 | # | Skill | 输入 | 输出 | 写入台账 |
 |---|-------|------|------|---------|
-| P1 | `hw-intake` | 项目资料 + source-manifest | 启动卡 + 路由判定(L1/L2/L3) + Gate 1 简报 + **任务包** | decisions.csv（仅 Gate 1 人工批准后） |
+| P1 | `hw-intake` | 项目资料 + source-manifest | 启动卡 + 路由判定(L1/L2/L3) + Gate 1 简报 + 任务包 | decisions.csv（Gate 1 后） |
 | P2 | `hw-product-strategy` | 所有已批准研究 + evidence | 产品规划报告（三定+MVP+路线图） | decisions.csv |
 | P3 | `hw-mrd-brd` | 产品规划报告 | MRD + BRD（L2 用合并版，L3 分别输出） | — |
 | P4 | `hw-product-definition` | 产品规划 + MRD/BRD | 产品定义文档（定位/JTBD/MVP/边界） | — |
 | P5 | `hw-prd` | 产品定义 + 约束 | PRD + requirements.csv | requirements.csv, traceability.csv |
 | P6 | `hw-validation-plan` | PRD + 假设 + 风险 | 验证计划 | traceability.csv（更新） |
-| P7 | `hw-gate-prep` | 各阶段产物 + Reviewer findings | Gate 摘要 + 选项分析 | decisions.csv（人工确认后） |
+| P7 | `hw-gate-prep` | 各阶段产物 + Reviewer findings | Gate 摘要 + 飞书审批请求 | decisions.csv（人工确认后） |
 
-### 5.3 Reviewer Skills（2 个）
+### 4.3 Reviewer Skills（2 个）
 
 | # | Skill | 输入 | 输出 | 写入台账 |
 |---|-------|------|------|---------|
 | V1 | `hw-review` | Researcher 报告 或 PM 文档 + 台账 | findings（带 severity + required_action） | risks.csv（如发现新风险） |
 | V2 | `hw-red-team` | PRD + 产品定义 + 假设 | 杀伤性假设 + 最便宜验证方案 | assumptions.csv（如发现新假设） |
 
-### 5.4 补充技能（2 个）
+### 4.4 补充技能（2 个）
 
 | # | Skill | 输入 | 输出 | 写入台账 |
 |---|-------|------|------|---------|
@@ -222,29 +239,25 @@ flowchart TD
 
 ---
 
-## 六、Agent 通信协议
+## 五、Agent 通信协议
 
-### 6.1 Researcher → PM 的契约
+### 5.1 Researcher → PM 的契约
 
 ```yaml
 research-delivery:
   artifact_id: "ART-{project}-{seq}"
   artifact_type: "market_study | user_research | competitive_analysis | compliance | patent"
-  report_path: "path/to/report.md"       # 完整报告（含摘要章节）
-  summary: "<500字摘要>"                  # 从报告摘要章节提取
-  evidence_ids: ["EV-001", "EV-002"]     # 新增 evidence 记录
-  assumption_ids: ["A-001"]              # 新增 assumption 记录
-  open_questions:                        # 需要 PM 决策的问题
+  report_path: "path/to/report.md"
+  summary: "<500字摘要>"
+  evidence_ids: ["EV-001", "EV-002"]
+  assumption_ids: ["A-001"]
+  open_questions:
     - question: "目标市场选择A还是B？"
       impacted_decisions: ["产品定位", "认证路径"]
-  route_impact:                          # 对路由的影响
-    - finding: "竞品C已覆盖目标价格带"
-      may_affect: "定价策略"
-  content_hash: "sha256..."
-  maturity: "reviewed"                   # 经 Reviewer 审核通过
+  maturity: "reviewed"
 ```
 
-### 6.2 PM → Reviewer 的契约
+### 5.2 PM → Reviewer 的契约
 
 ```yaml
 review-request:
@@ -252,20 +265,18 @@ review-request:
   artifact_type: "product_strategy | mrd | brd | product_definition | prd | validation_plan"
   artifact_path: "path/to/document.md"
   artifact_version: "v0.1"
-  input_artifacts:                       # 上游输入（ Reviewer 需交叉验证）
+  input_artifacts:
     - artifact_id: "ART-001"
       version: "v1.0"
-  content_hash: "sha256..."
   maturity: "draft"
 ```
 
-### 6.3 Reviewer → PM 的契约
+### 5.3 Reviewer → PM 的契约
 
 ```yaml
 review-result:
   review_id: "REV-{project}-{seq}"
   artifact_id: "ART-{project}-{seq}"
-  artifact_version: "v0.1"
   verdict: "approved | conditional | rejected"
   findings:
     - finding_id: "F-001"
@@ -273,16 +284,14 @@ review-result:
       category: "evidence | scope | requirement | acceptance | validation | risk | consistency"
       location: "章节或对象ID"
       finding: "具体问题描述"
-      evidence: "支持该判断的规则或证据"
       required_action: "must_fix | suggest | submit_decision"
-  content_hash: "sha256..."
 ```
 
 ---
 
-## 七、输出格式
+## 六、输出格式
 
-### 7.1 研究报告结构
+### 6.1 研究报告结构
 
 ```markdown
 # 报告标题
@@ -303,30 +312,30 @@ review-result:
 ...
 ```
 
-### 7.2 CSV 台账规则
+### 6.2 CSV 台账规则
 
-- **索引唯一**：ID 格式 `{type}-{project}-{seq}`，不重复
-- **数据可信**：每条记录必须标记 source + quality_level + confidence
+- **索引唯一**：ID 格式 `{type}-{project}-{seq}`
+- **数据可信**：每条记录标记 source + quality_level + confidence
 - **数据完整**：关键结论必须登记，缺失输入标记为 gap
 - **CSV 是权威**：报告和 CSV 冲突时，以 CSV 为准
 
 ---
 
-## 八、台账机制
+## 七、台账机制
 
-### 8.1 写入规则
+### 7.1 写入规则
 
 | 台账 | 写入者 | 触发时机 |
 |------|--------|---------|
 | evidence.csv | Researcher | 发现关键事实时**立即**写入 |
-| assumptions.csv | Researcher + PM | Researcher 标记未验证判断；PM 标记决策中的新假设 |
+| assumptions.csv | Researcher + PM | Researcher 标记未验证判断；PM 标记新假设 |
 | risks.csv | PM + Reviewer | 发现风险时写入 |
 | requirements.csv | PM（PRD） | PRD 编写时**同步**写入 |
 | traceability.csv | PM | 建立证据→需求关联时**增量**追加 |
-| decisions.csv | PM（Gate Prep） | Gate 评审后**人工确认**后写入 |
+| decisions.csv | PM（Gate Prep） | Gate 审批后**人工确认**后写入 |
 | method_learnings.csv | PM（复盘） | 项目复盘后写入 |
 
-### 8.2 确定性校验规则（8 条）
+### 7.2 确定性校验规则（8 条）
 
 | 规则 | 检查内容 | 严重级别 |
 |------|---------|---------|
@@ -341,13 +350,77 @@ review-result:
 
 ---
 
-## 九、跨项目学习机制
+## 八、跨项目学习机制
 
 新项目启动时，自动检索 method_learnings.csv 中匹配的记录：
 
 - 匹配规则：`applies_to` 字段包含当前项目的品类/技术/市场关键词
-- 仅提取共性或关联的经验教训（不加载全量历史）
+- 仅提取共性或关联的经验教训
 - 加载到当前会话上下文，PM Agent 在 Gate 准备时检查是否重复了已知错误
+
+---
+
+## 九、Phase 3 飞书集成架构
+
+### 9.1 集成概览
+
+Phase 1-2 不依赖飞书，Agent 在 Claude Code 中纯本地运行。
+
+Phase 3 增加 Feishu Adapter 层，将 Agent 产出同步到飞书，同时接收人类的反馈。
+
+```mermaid
+flowchart LR
+    subgraph Agent["Agent Runtime"]
+        CORE["Agent Core"]
+        SKILLS["Skills"]
+        DATA["Templates / Registers"]
+    end
+
+    subgraph Adapter["Feishu Adapter"]
+        SYNC["文档同步引擎"]
+        APPROVE["审批同步引擎"]
+        NOTIFY["通知引擎"]
+    end
+
+    subgraph Feishu["Feishu 协作界面"]
+        DOCS["文档<br/>人类评论/修改"]
+        APR["审批<br/>Gate 决策"]
+        IM["消息<br/>通知/提醒"]
+    end
+
+    SKILLS -->|"产出文档"| SYNC
+    SKILLS -->|"发起审批"| APPROVE
+    SKILLS -->|"推送通知"| NOTIFY
+
+    SYNC -->|"同步"| DOCS
+    DOCS -->|"评论/修改"| SYNC
+    SYNC -->|"更新"| DATA
+
+    APPROVE -->|"发起"| APR
+    APR -->|"决策"| APPROVE
+    APPROVE -->|"写入"| DATA
+
+    NOTIFY -->|"推送"| IM
+```
+
+### 9.2 集成任务
+
+| 任务 | 产出 | 说明 |
+|------|------|------|
+| 文档双向同步 | Markdown ↔ 飞书文档 | AI 同步到飞书 → 人类评论/修改 → AI 拉回更新。冲突时人类修改优先 |
+| 审批集成 | Gate → 飞书审批 | AI 准备 Gate 摘要 → 发起审批 → 人类决策 → 回写 decisions.csv |
+| IM 通知 | 事件 → 消息卡片 | Reviewer blocker、Gate 审批请求、任务逾期 → 推送给对应 PM |
+| Base 共享 | CSV ↔ Base 表 | 项目状态、任务清单、台账在 Base 中人类可查看/编辑 |
+| 任务同步 | 任务包 → 飞书任务 | AI 拆解的任务自动生成人类 PM 的飞书待办 |
+
+### 9.3 同步冲突处理
+
+| 场景 | 处理规则 |
+|------|---------|
+| 人类在飞书中修改了 AI 生成的报告 | 人类修改优先，AI 拉回后合并到本地 Markdown |
+| AI 重新生成报告时飞书有未同步的人类修改 | 停止覆盖，通知 PM 存在冲突，等待人工处理 |
+| 人类审批退回 | AI 读取退回原因 → 修正 → 重新发起审批 |
+| 台账在 Base 和 CSV 中不一致 | CSV 为权威，Base 是快照。同步方向在 manifest 中声明 |
 
 ---
 
@@ -355,26 +428,17 @@ review-result:
 
 ### Phase 0：基础搭建（~2-3 天）
 
-**目标**：完成设计定案 + Agent 核心就绪 + 项目脚手架
-
 | 任务 | 产出 |
 |------|------|
 | 0.1 目录结构初始化 | 标准目录树 |
-| 0.2 AGENTS.md 编写 | Agent System Prompt（方法论、3-Agent 角色、质量底线、技能路由表、台账规则） |
-| 0.3 迁移 mvp-1 资产 | 8 个 JSON Schema + 4 个 Python 校验脚本 |
+| 0.2 AGENTS.md 编写 | Agent System Prompt |
+| 0.3 迁移 mvp-1 资产 | JSON Schema + Python 校验脚本 |
 | 0.4 模板更新 | 研究报告模板增加"摘要"章节；新增合规研究和专利分析报告模板 |
 | 0.5 Skill 编写范式文档 | SKILL_TEMPLATE.md |
 
-**退出条件**：
-- AGENTS.md 加载后，Agent 能正确回答"我是什么角色、我的质量底线是什么"
-- validators/ 脚本能对示例台账输出通过/失败结果
-- 模板包含摘要章节
-
----
-
 ### Phase 1：MVP — L1 本地闭环（~1-2 周）
 
-**目标**：Claude Code 内跑通一个 L1 项目的完整流程
+**目标**：Claude Code 内跑通 L1 项目完整流程。**不涉及飞书**。
 
 | 任务 | 产出 | 依赖 |
 |------|------|------|
@@ -383,19 +447,7 @@ review-result:
 | 1.3 Reviewer 集成 | hw-review 作为子代理独立审查 | 任务 1.1 |
 | 1.4 台账端到端验证 | evidence → traceability → requirements 完整链路 | 任务 1.2 |
 
-**MVP 验证场景**：mvp-1 中的"无线链式开窗机指定电机降本"（L1）
-
-**退出条件**：
-- L1 项目从启动到验证计划全部通过 Agent 完成
-- 每个文档产出前经过 Reviewer 审核
-- traceability 链路完整
-- 所有 Gate 节点有人工确认记录
-
----
-
 ### Phase 2：L2 + 完整 Skills（~2 周）
-
-**目标**：扩展 L2 流程，补齐全部 16 个 Skills
 
 | 任务 | 产出 | 依赖 |
 |------|------|------|
@@ -404,56 +456,17 @@ review-result:
 | 2.3 跨项目学习 | method_learnings 检索 + 自动加载 | 任务 2.1 |
 | 2.4 任务包自动生成 | hw-intake 输出中增加任务清单 | 任务 2.1 |
 
-**退出条件**：
-- L2 项目从启动到 PRD 全部通过 Agent 完成
-- L2 MRD/BRD 合并版正确生成
-- 跨项目学习机制生效
+### Phase 3：飞书协作界面接入（~2-3 周）
 
----
-
-### Phase 3：飞书集成（~2-3 周）
-
-**目标**：从 Claude Code 本地扩展到飞书工作台
-
-**架构原则**：Feishu Adapter 只负责"翻译"——将 Agent Core 的 artifact/decision/task 对象同步到飞书。不修改 Agent Core 的任何逻辑。
-
-```mermaid
-flowchart LR
-    subgraph Existing["Phase 1-2 已完成"]
-        CORE["Agent Core"]
-        SKILLS["Skills"]
-        DATA["Templates / Registers"]
-        VAL["Validators"]
-        CC["Claude Code Adapter"]
-    end
-
-    subgraph New["Phase 3 新增: Feishu Adapter"]
-        BASE["Base 表同步<br/>项目/任务/台账/交付"]
-        DOCS["Docs 文档评审<br/>Markdown ↔ 飞书文档"]
-        APPROVAL["Approval 审批<br/>阶段 Gate"]
-        TASK["Task 任务同步<br/>个人待办"]
-        IM["IM 消息通知<br/>卡片/提醒"]
-        WIKI["Wiki 方法库<br/>版本发布"]
-    end
-
-    CORE --> BASE
-    CORE --> DOCS
-    CORE --> APPROVAL
-    CORE --> TASK
-    CORE --> IM
-    CORE --> WIKI
-```
+**目标**：增加 Feishu Adapter，Agent 产出同步到飞书，人类通过飞书与 AI 协作。
 
 | 任务 | 产出 |
 |------|------|
-| 3.1 飞书 Base 数据表 | Projects, Tasks, Reviews, Decisions, Deliveries 表（对齐文件 15 6.2 节） |
-| 3.2 飞书 Docs 集成 | 本地 Markdown → 飞书文档评审副本 → 批准后发布 |
-| 3.3 飞书 Approval 集成 | 阶段 Gate 使用飞书原生审批 |
-| 3.4 飞书 Task 集成 | Base 任务 → 飞书任务同步（个人待办和提醒） |
-| 3.5 飞书 IM 通知 | Gate 审批请求、Reviewer blocker、任务指派的消息卡片 |
-| 3.6 飞书 Wiki 发布 | 批准后的方法更新发布到知识库 |
-
----
+| 3.1 文档双向同步 | Markdown ↔ 飞书文档（含评论/修改同步） |
+| 3.2 审批集成 | Gate → 飞书审批（AI 发起，人类决策，回写 decisions.csv） |
+| 3.3 IM 通知 | Reviewer blocker、Gate 审批请求、逾期提醒的消息卡片 |
+| 3.4 Base 共享 | 项目状态/任务/台账在 Base 中可视化 |
+| 3.5 任务同步 | 任务包 → 飞书任务（人类待办） |
 
 ### Phase 4：L3 + 生产化（按需）
 
@@ -461,7 +474,7 @@ flowchart LR
 |------|------|
 | 4.1 L3 完整流程 | 全部 11 份文档的端到端验证 |
 | 4.2 多项目并行管理 | Base 项目总览、风险仪表盘 |
-| 4.3 运行指标 | 效率/质量/决策/交付/Agent 指标（对齐文件 15 第 16 节） |
+| 4.3 运行指标 | 效率/质量/决策/交付/Agent 指标 |
 | 4.4 独立应用封装 | 从 Claude Code 完全解耦，独立部署 |
 
 ---
@@ -476,86 +489,39 @@ flowchart LR
 ├── HANDOFF.md                         # 会话交接（已有）
 │
 ├── templates/                         # 模板 [已有，Phase 0 微调]
-│   ├── 00_项目启动卡.md
+│   ├── 00_项目启动卡.md  ~  14_产品规划报告.md
 │   ├── 00A_文档关系与追踪说明.md
-│   ├── 01_产品市场与机会研究报告.md    # 增加"摘要"章节
-│   ├── 02_MRD_市场需求文档.md
-│   ├── 03_BRD_商业需求文档.md
-│   ├── 04_产品定义文档.md
-│   ├── 05_PRD_产品需求文档.md
-│   ├── 06_验证计划.md
-│   ├── 07_MRD_BRD合并版_标准流程.md
-│   ├── 08_流程裁剪判断表.md
-│   ├── 09_竞品研究分析报告.md         # 增加"摘要"章节
-│   ├── 10_用户研究与VOC分析报告.md     # 增加"摘要"章节
-│   ├── 11_项目复盘与方法沉淀记录.md
-│   ├── 12_L1_轻量产品定义_PRD合并文档.md
-│   ├── 13_项目任务包与交付检查表.md
-│   ├── 14_产品规划报告.md
-│   ├── 15_AI产品经理工作流_方案A详细设计.md
-│   ├── 16_项目启动引导式访谈与路由信息补全方案.md
-│   ├── 17_产品合规研究报告.md          # [Phase 2 新增]
-│   └── 18_专利格局分析报告.md          # [Phase 2 新增]
+│   └── 17_产品合规研究报告.md, 18_专利格局分析报告.md [Phase 2]
 │
 ├── registers/                         # 台账 [已有]
-│   ├── evidence.csv
-│   ├── assumptions.csv
-│   ├── risks.csv
-│   ├── decisions.csv
-│   ├── requirements.csv
-│   ├── traceability.csv
-│   └── method_learnings.csv
+│   └── 7 CSV 文件
 │
 ├── skills/                            # Agent Skills [Phase 1-2]
-│   ├── SKILL_TEMPLATE.md              # Skill 编写范式 [Phase 0]
-│   │
-│   ├── researcher/                    # Researcher Skills (5)
-│   │   ├── hw-market-study/
-│   │   │   ├── SKILL.md
-│   │   │   └── references/
-│   │   ├── hw-user-research/
-│   │   ├── hw-competitive-analysis/
-│   │   ├── hw-compliance-research/
-│   │   └── hw-patent-analysis/
-│   │
-│   ├── pm/                            # PM Skills (7)
-│   │   ├── hw-intake/
-│   │   │   ├── SKILL.md
-│   │   │   └── references/
-│   │   │       ├── question-tree.md
-│   │   │       └── output-contract.md
-│   │   ├── hw-product-strategy/
-│   │   ├── hw-mrd-brd/
-│   │   ├── hw-product-definition/
-│   │   ├── hw-prd/
-│   │   ├── hw-validation-plan/
-│   │   └── hw-gate-prep/
-│   │
-│   ├── reviewer/                      # Reviewer Skills (2)
-│   │   ├── hw-review/
-│   │   └── hw-red-team/
-│   │
-│   └── shared/                        # Shared Skills (2)
-│       ├── hw-retro/
-│       └── hw-handoff/
+│   ├── SKILL_TEMPLATE.md
+│   ├── researcher/（5 Skills）
+│   ├── pm/（7 Skills）
+│   ├── reviewer/（2 Skills）
+│   └── shared/（2 Skills）
 │
 ├── validators/                        # 确定性校验 [Phase 0]
-│   ├── schemas/                       # JSON Schema（从 mvp-1 迁移）
-│   └── scripts/                       # Python 校验脚本（从 mvp-1 迁移）
+│   ├── schemas/（JSON Schema）
+│   └── scripts/（Python）
 │
-├── adapters/                          # Runtime 适配器
-│   ├── claude-code/                   # [Phase 0-2]
-│   └── feishu/                        # [Phase 3]
+├── adapters/
+│   └── feishu/                        # Feishu Adapter [Phase 3]
+│       ├── doc-sync.md               # 文档同步契约
+│       ├── approval-sync.md          # 审批同步契约
+│       ├── notification-spec.md      # 通知规范
+│       └── conflict-resolution.md    # 冲突处理规则
 │
-├── orchestration/                     # [Phase 1-2]
-│   ├── flows/（L1.yaml, L2.yaml, L3.yaml）
-│   └── gates/（gate-definitions.md）
+├── docs/                              # 设计文档
+│   ├── architecture.md               # 本方案
+│   ├── 15_AI产品经理工作流_方案A详细设计.md
+│   └── 16_项目启动引导式访谈与路由信息补全方案.md
 │
-├── docs/
-│   └── architecture.md               # 本方案文档
-│
-├── mvp-1/                             # 历史 MVP（保留参考）
-└── archives/                          # 阶段归档
+└── .claude/                           # Claude Code 配置
+    ├── settings.local.json
+    └── commands/
 ```
 
 ---
@@ -564,8 +530,8 @@ flowchart LR
 
 | 风险 | 影响 | 缓解措施 |
 |------|------|---------|
-| Skills 在 Claude Code 中的可靠性 | Agent 行为不稳定，跳过关键步骤 | 每个 Skill 有可检查的完成条件；Reviewer 独立验证 |
-| 上下文窗口不足 | 长报告 + 多份文档超出上下文限制 | 摘要章节设计；PM Agent 先读摘要再按需回查原文 |
-| 人工 Gate 过多导致效率低 | PM 感到流程繁琐 | Gate 按 L1/L2/L3 分级裁剪 |
-| 台账数据漂移 | CSV 和报告内容不一致 | 确定性校验脚本在 Gate 前强制运行；CSV 是权威 |
+| Skills 在 Claude Code 中的可靠性 | Agent 行为不稳定 | 每个 Skill 有可检查的完成条件；Reviewer 独立验证 |
+| 上下文窗口不足 | 长报告超出上下文限制 | 摘要章节设计；PM Agent 先读摘要再按需回查原文 |
+| 文档双向同步冲突 | 人类和 AI 同时修改 | 人类修改优先；冲突时停止覆盖通知 PM |
+| 台账数据漂移 | CSV 和报告不一致 | 确定性校验在 Gate 前强制运行；CSV 是权威 |
 | Feishu 集成复杂度 | Phase 3 延期 | Feishu Adapter 隔离在独立模块，不阻塞 Phase 1-2 |

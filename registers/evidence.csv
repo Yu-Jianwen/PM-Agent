@@ -1,2 +1,2 @@
 evidence_id,title,source_type,source_name,url_or_path,date_collected,source_grade,direct_quote,importance,related_doc,related_section,summary,confidence,notes
-EV-001,,官方资料/电商页面/销售数据/用户评论/社媒内容/测评视频/购买记录/安装记录/拆机照片/BOM估算/售后记录,,,,,,,,,,高/中/低,
+EV-PROJ-001,,官方资料/电商页面/销售数据/用户评论/社媒内容/测评视频/购买记录/安装记录/拆机照片/BOM估算/售后记录,,,,C,,supporting,,,高/中/低,示例数据

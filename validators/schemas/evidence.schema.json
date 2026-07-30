@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "evidence",
+  "title": "Evidence Record",
+  "type": "object",
+  "required": ["evidence_id", "title", "source_type", "source_grade", "confidence"],
+  "properties": {
+    "evidence_id": {
+      "type": "string",
+      "pattern": "^EV-[A-Z]+-\\d{3}$",
+      "description": "Format: EV-{project}-{seq}"
+    },
+    "source_grade": {
+      "type": "string",
+      "enum": ["A", "B", "C", "D"],
+      "description": "A=政府/监管/财报/检测, B=行业报告/专利, C=品牌PR/电商/协会, D=社交/匿名"
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["高", "中", "低", "未知"]
+    },
+    "importance": {
+      "type": "string",
+      "enum": ["central", "supporting", "tangential"]
+    },
+    "direct_quote": {
+      "type": "string",
+      "description": "源文直接引述，不是 Agent 改写"
+    }
+  }
+}

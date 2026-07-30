@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "traceability",
+  "title": "Traceability Record",
+  "type": "object",
+  "required": ["trace_id", "requirement_id", "evidence_id"],
+  "properties": {
+    "trace_id": {
+      "type": "string",
+      "pattern": "^T-[A-Z]+-\\d{3}$"
+    },
+    "requirement_id": {
+      "type": "string",
+      "pattern": "^REQ-[A-Z]+-\\d{3}$"
+    },
+    "evidence_id": {
+      "type": "string",
+      "pattern": "^EV-[A-Z]+-\\d{3}$"
+    },
+    "validation_item": { "type": "string" },
+    "status": {
+      "type": "string",
+      "enum": ["linked", "verified", "broken"]
+    }
+  }
+}

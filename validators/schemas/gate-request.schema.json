@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "gate-request",
+  "title": "Gate Approval Request",
+  "type": "object",
+  "required": ["gate_id", "project_id", "artifacts", "review_status", "validation_status"],
+  "properties": {
+    "gate_id": { "type": "string", "enum": ["Gate1", "Gate2", "Gate3", "Gate4", "Gate5", "Gate6", "Gate7"] },
+    "project_id": { "type": "string" },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["artifact_id", "artifact_type", "version", "review_verdict"],
+        "properties": {
+          "artifact_id": { "type": "string" },
+          "artifact_type": { "type": "string" },
+          "version": { "type": "string" },
+          "review_verdict": { "type": "string", "enum": ["approved", "conditional", "rejected"] },
+          "content_hash": { "type": "string" }
+        }
+      }
+    },
+    "validation_status": {
+      "type": "object",
+      "required": ["registers_check", "traceability_check"],
+      "properties": {
+        "registers_check": { "type": "boolean" },
+        "traceability_check": { "type": "boolean" }
+      }
+    },
+    "decision_options": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

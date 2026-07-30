@@ -1,0 +1,2 @@
+risk_id,risk,category,probability,impact,trigger,mitigation,owner,status,related_evidence,notes
+K-001,,市场/用户/技术/供应链/认证/质量/售后/商业,高/中/低,高/中/低,,,,,,

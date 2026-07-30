@@ -1,0 +1,19 @@
+# Tool outputs
+archify-out/
+graphify-out/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Dagu
+.dagu/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
